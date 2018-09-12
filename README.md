@@ -11,3 +11,13 @@ I've also been tyring to learn how to use git from the command line.
 Tutorials
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
+
+[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
+
+[Choropleth plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.11.18/TT.9.11.18.choropleth.md)
+
+[Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
+
+[Faceted bar plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
+
+[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
