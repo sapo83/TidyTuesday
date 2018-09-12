@@ -7,3 +7,5 @@ You can either recreate the original graphic or create something of you own. The
 This has been a great way to work on my data visualization skills. My emphasis has been on commenting my code better. Also, I've started doing tutorials in an effort to learn R markdown better.
 
 I've also been tyring to learn how to use git from the command line.
+
+test
