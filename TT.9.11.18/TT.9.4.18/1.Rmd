@@ -1,0 +1,97 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday 9-4-18 Week 23
+
+This week's data is fast food nutritional data. The data can be found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2018-09-04/fastfood_calories.csv).
+
+
+First, let's load the tidyverse library & read in our data.
+
+```{r}
+
+library(tidyverse)
+
+data <- read_csv("fastfood_calories.csv")
+```
+
+I want to look at the average calories per each item for each restaurant.
+
+First, we use select() to pick the columns we need. For this graphic, we need the restaurant, item, & calories column.
+
+Then we need to group out data by restaurant using group_by().
+
+We can use summarise() to find the total number of items for each restaurant & to find total number of calories for all the items combined.
+
+Last of all, we use mutate() to get the average number of calories per item for each restaurant.
+
+Using head(), we can take a quick peek at the data to make sure everything looks good!
+
+```{r}
+
+data1 <- data %>%
+  select(restaurant, item, calories) %>%
+  group_by(restaurant) %>%
+  summarise(count = n(), total_cals = sum(calories)) %>%
+  mutate(cals_per_item = total_cals/count)
+
+head(data1)
+```
+
+Now let's plot this data! We'll start with a basic bar plot.
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(restaurant, cals_per_item))
+```
+
+Using the most basic plot is a good way to make sure that the graphic is showing what you think it should. No sense trying to make something look pretty if it's not informative!
+
+Let's clean it up! We're going to start by using coord_flip() to make the direction of the bars horizontal instead of vertical.
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(restaurant, cals_per_item)) +
+  coord_flip()
+```
+
+I would like to reorder the x-axis (now our y-axis). I want the restaurant with the lowest acoumnt of calories per item on the top & the restaurant with the highest amount of calories per item on the bottom.
+
+This is a two step process. First, we reorder the x-axis using reorder(). The format for this command is reorder(item_to_be_reordered, value_to_reorder_by). Here our reorder command is reorder(restaurant, cals_per_item). This gives us an axis in the opposite order we want (high value on top, low value on bottom).
+
+The next step is to use fct_rev() to reverse the order. fct_rev() is found in the forcats packages which is a part of the tidyverse library. Let's see how it looks!
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(fct_rev(reorder(restaurant, cals_per_item)), cals_per_item)) +
+  coord_flip()
+```
+
+Let's do some more cleaning. Let's remove the titles from both axes & bump up the font size on the axis tick mark labels.
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(fct_rev(reorder(restaurant, cals_per_item)), cals_per_item)) +
+  coord_flip() +
+  theme(axis.title = element_blank(), axis.text = element_text(size = 14))
+```
+
+Let's add some color. For this, we can use scale_fill_brewer. I picked "Set2" because I like the pastels. I also added "fill = restaurant" to change the color of the bars. This will create a legend. I added 'legend.position = "none"' to remove the legend.
+
+Next I want to remove the background panel, grid & border. For this, I added a couple items to the theme call.
+
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(fct_rev(reorder(restaurant, cals_per_item)), cals_per_item, fill = restaurant)) +
+  coord_flip() +
+  theme(legend.position = "none",
+    axis.title = element_blank(),
+    axis.text = element_text(size = 14),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) +
+  scale_fill_brewer(palette="Set2")
+```

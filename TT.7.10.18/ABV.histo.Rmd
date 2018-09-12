@@ -1,0 +1,24 @@
+library(readxl)
+library(tidyverse)
+
+### Read in both sheets from Excel file
+beer_data <- read_excel("week15_beers.xlsx", sheet = "beers")
+
+### Select ABV column, remove NAs
+abv_data <- beer_data %>%
+  select(abv) %>%
+  na.omit()
+
+### Create plot, add line @ mean, add density curve
+A <- ggplot(abv_data) +
+  geom_histogram(aes(x = abv, fill = ..count..), binwidth = 0.00125) +
+  geom_vline(aes(xintercept = mean(abv_data$abv)), color = "black", size = 0.25, linetype = "dotted") +
+  geom_density(aes(x = abv), linetype = "dotted") +
+  theme(legend.position = "none", axis.title = element_blank(), axis.text = element_text(size = 12), panel.grid.major.y = element_line(colour = 'gray', linetype = 'dashed'), panel.background = element_blank(), axis.ticks = element_blank(), plot.title=element_text(size = 20, hjust = 0.5)) +
+  scale_fill_distiller(palette = "YlGnBu") +
+  ggtitle("Alcohol By Volume (ABV)")
+
+### Save plot to file
+png("ABV.histo.png")
+plot(A)
+dev.off()

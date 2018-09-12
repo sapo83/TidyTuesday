@@ -1,0 +1,39 @@
+library(ggpubr)
+library(jpeg)
+library(reshape2)
+library(tidyverse)
+
+### Clear workspace
+rm(list=ls())
+
+### Read in data
+data<-read_csv("star.wars.csv")
+
+### Read in state/region file
+statedf<-read_csv("state.region.csv")
+colnames(statedf)<-c("State", "Location")
+
+### Clean up data & move to new data frame
+### Most of the clean up is renaming columns
+data1<-rename_at(data, 4, ~"Ep1_seen") %>% rename_at(5, ~"Ep2_seen") %>% rename_at(6, ~"Ep3_seen") %>% rename_at(7, ~"Ep4_seen") %>% rename_at(8, ~"Ep5_seen") %>% rename_at(9, ~"Ep6_seen") %>% rename_at(10, ~"Rating_6") %>% rename_at(11, ~"Rating_5") %>% rename_at(12, ~"Rating_4") %>% rename_at(13, ~"Rating_3") %>% rename_at(14, ~"Rating_2") %>% rename_at(15, ~"Rating_1") %>% rename_at(16, ~"Han_Solo") %>% rename_at(17, ~"Luke_Skywalker") %>% rename_at(18, ~"Princess_Leia") %>% rename_at(19, ~"Anakin_Skywalker") %>% rename_at(20, ~"Obi_Wan") %>% rename_at(21, ~"Emperor_Palpatine") %>% rename_at(22, ~"Darth_Vader") %>% rename_at(23, ~"Lando_Calrissian") %>% rename_at(24, ~"Boba_Fett") %>% rename_at(25, ~"C-3PO") %>% rename_at(26, ~"R2D2") %>% rename_at(27, ~"Jar_Jar_Binks") %>% rename_at(28, ~"Padme_Amidala") %>% rename_at(29, ~"Yoda") %>% rename_at(38, ~"Location")
+
+### Remove first row (second header row)
+data1<-data1[-1,]
+
+df1<-select(data1, Darth_Vader, Age) %>% drop_na() %>% melt(id.vars="Age") %>% group_by(Age, variable, value) %>% tally()
+
+image<-readJPEG("darth.jpg")
+
+df1$Age<-factor(df1$Age, levels=c("18-29", "30-44","45-60","> 60"))
+df1$value<-factor(df1$value, levels=c("Very favorably", "Somewhat favorably", "Neither favorably nor unfavorably (neutral)", "Somewhat unfavorably", "Very unfavorably", "Unfamiliar (N/A)"))
+
+A<-ggplot(df1) + background_image(image) +
+  geom_bar(aes(x=Age, y=n, fill=value), stat="identity", position="dodge") +
+  geom_text(aes(x=Age, y=n, label=n, fill=value), position = position_dodge(width = 0.9), hjust=0.5, vjust=-0.5) +
+  scale_fill_manual(values=c("#c9c9c9", "#b3b3b3", "#999999", "#808080", "#666666","#4d4d4d")) +
+  theme(legend.position="bottom", legend.title=element_blank(), axis.title=element_blank(), axis.ticks=element_blank(), axis.text.y=element_blank(), axis.text.x=element_text(size=12), plot.title=element_text(size=20, hjust=0.5)) +
+  ggtitle("Darth Vader Favorability Ratings by Age")
+
+#png("bad.guy.png")
+plot(A)
+#dev.off()

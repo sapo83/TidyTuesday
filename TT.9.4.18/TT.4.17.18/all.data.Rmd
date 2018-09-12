@@ -1,0 +1,38 @@
+library(readxl)
+library(reshape2)
+library(tidyverse)
+
+## Clear workspace
+rm(list=ls())
+
+## Read in excel file
+data<-read_excel("global_mortality.xlsx")
+
+## Remove (%) from column names
+names(data) <- str_trim(str_remove_all(names(data), "[[:punct:]]"))
+
+## Use only data from 1990
+datan<-subset(data, year == 1990)
+
+## Remove country code & year from tibble
+datan<-select(datan, -(countrycode:year))
+
+## Melt data
+dfm<-melt(datan)
+
+## Replace all NAs with 0
+dfm[is.na(dfm)] <- 0
+
+## Create plot
+A<-ggplot(dfm, aes(country, value, fill=variable)) +
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.key.width=unit(0.3,"cm"),legend.key.height=unit(0.3,"cm"), legend.title = element_blank()) +
+  guides(fill=guide_legend(ncol=1))+
+  coord_flip() +
+  ylab("Country") +
+  xlab("Percent")
+
+## Save plot as png with custom size
+png("all.data2.png", height=1000, width=800)
+plot(A)
+dev.off()

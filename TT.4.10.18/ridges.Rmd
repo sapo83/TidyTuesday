@@ -1,0 +1,47 @@
+library(tidyverse)
+library(reshape2)
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(ggridges)
+
+## Clear workspace
+rm(list=ls())
+
+## Read in .csv file
+data<-read_csv("tidy_tuesday_week2.csv",col_names=TRUE)
+
+## Replace all NAs with 0
+data[is.na(data)] <- 0
+
+## Change year coloumn to character type
+data$year<-as.character(data$year)
+
+## Average all numeric columns
+avgdf<-data %>% group_by(year) %>% summarise_if(is.numeric, mean)
+
+## Melt data frame (avg) & add group column
+dfm<-melt(avgdf, id.vars="year")
+dfm$group<-c("Average")
+
+## Melt data frame (norm) & add group column
+dfm2<-melt(data, id.vars="year")
+dfm2$group<-c("Normal")
+
+## Combine both data frames into one
+totald<-rbind(dfm,dfm2)
+
+## Create ridges object
+A<-ggplot(dfm, aes(x=value, y=reorder(variable, desc(variable)), fill=variable, color=variable)) +
+  geom_density_ridges(scale=3) +
+  theme(legend.position="none") +
+  ylab("Position") +
+  xlab("Salary") +
+  scale_x_continuous(labels = dollar) +
+#  facet_wrap(~ group) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+## Save to file
+png("ridges.avg.png")
+plot(A)
+dev.off()

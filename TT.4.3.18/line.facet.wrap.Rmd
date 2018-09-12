@@ -1,0 +1,36 @@
+library(tidyverse)
+library(reshape2)
+library(ggplot2)
+library(RColorBrewer)
+
+rm(list=ls())
+
+## Read in file
+df<-read.csv("us.avg.tuition.noCR.csv", header=T)
+
+## Rename columns
+colnames(df)<-c("State","04-05","05-06","06-07","07-08","08-09","09-10","10-11","11-12","12-13","13-14","14-15","15-16")
+
+## Convert 1st column to character
+df$State<-as.character(df$State)
+
+## Strip "$" & "," from dollar values
+indx <- sapply(df, is.factor)
+df[indx] <- lapply(df[indx], function(x) as.numeric(gsub("[,$]", "", x)))
+
+## Melt dataframe
+dfm<-melt(df, id.vars = "State")
+
+myPalette <- colorRampPalette(brewer.pal(11, "RdYlGn"))
+
+A<-ggplot(dfm, aes(fct_rev(State), value, group=1)) +
+  geom_point(aes(color=value)) +
+  facet_wrap(~ variable, nrow=2) +
+  scale_color_gradient(low = "#00cc00", high = "#0000cc") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.text.y=element_text(size=8)) +
+  coord_flip() +
+  labs(y="Tuition", x="State", color="Tuition ($)")
+
+pdf("scatter.facet.pdf", height=10, width=10)
+plot(A)
+dev.off()

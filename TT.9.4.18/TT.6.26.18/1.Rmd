@@ -1,0 +1,15 @@
+library(tidyverse)
+
+data <- read.csv("alcohol_global.csv", sep=",", header=TRUE)
+
+beer <- data %>%
+  select(country, beer_servings) %>%
+  filter(beer_servings > 0) %>%
+  #group_by(beer_servings) %>%
+  #summarise(total = count(beer_servings))
+  count(beer_servings)
+
+A <- ggplot(beer) +
+  geom_bar(aes(x=beer_servings, y=n), stat="identity")
+
+plot(A)

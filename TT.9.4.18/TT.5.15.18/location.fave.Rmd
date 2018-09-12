@@ -1,0 +1,61 @@
+library(fiftystater)
+library(reshape2)
+library(tidyverse)
+
+### Clear workspace
+rm(list=ls())
+
+### Read in Star Wars data
+data<-read_csv("star.wars.csv")
+
+### Read in state/region list
+statedf<-read_csv("state.region.csv")
+colnames(statedf)<-c("State","Location")
+
+### Clean up data & move to new data frame
+### Most of the clean up is renaming columns
+data1<-rename_at(data, 4, ~"Ep1_seen") %>% rename_at(5, ~"Ep2_seen") %>% rename_at(6, ~"Ep3_seen") %>% rename_at(7, ~"Ep4_seen") %>% rename_at(8, ~"Ep5_seen") %>% rename_at(9, ~"Ep6_seen") %>% rename_at(10, ~"Rating_6") %>% rename_at(11, ~"Rating_5") %>% rename_at(12, ~"Rating_4") %>% rename_at(13, ~"Rating_3") %>% rename_at(14, ~"Rating_2") %>% rename_at(15, ~"Rating_1") %>% rename_at(16, ~"Han_Solo") %>% rename_at(17, ~"Luke_Skywalker") %>% rename_at(18, ~"Princess_Leia") %>% rename_at(19, ~"Anakin_Skywalker") %>% rename_at(20, ~"Obi_Wan") %>% rename_at(21, ~"Emperor_Palpatine") %>% rename_at(22, ~"Darth_Vader") %>% rename_at(23, ~"Lando_Calrissian") %>% rename_at(24, ~"Boba_Fett") %>% rename_at(25, ~"C3PO") %>% rename_at(26, ~"R2D2") %>% rename_at(27, ~"Jar_Jar_Binks") %>% rename_at(28, ~"Padme_Amidala") %>% rename_at(29, ~"Yoda") %>% rename_at(38, ~"Location")
+
+### Remove first row (second header row)
+data1<-data1[-1,]
+
+### Select columns for highest rating & Location
+### Rename values in highest rating column
+### Group by Location & highest rating
+### Tally results, keep highest count
+df<-select(data1, Rating_6, Location) %>% drop_na() %>% mutate(Rating_6 = str_replace(Rating_6, "1", "Star Wars: Episode I The Phantom Menace"), Rating_6 = str_replace(Rating_6, "2", "Star Wars: Episode II Attack of the Clones"), Rating_6 = str_replace(Rating_6, "3", "Star Wars: Episode III Revenge of the Sith"), Rating_6 = str_replace(Rating_6, "4", "Star Wars: Episode IV A New Hope"), Rating_6 = str_replace(Rating_6, "5", "Star Wars: Episode V The Empire Strikes Back"), Rating_6 = str_replace(Rating_6, "6", "Star Wars: Episode VI Return of The Jedi")) %>% group_by(Location, Rating_6) %>% tally() %>% group_by(Location) %>% top_n(1, n)
+
+### Drop tie from Middle Atlantic Region
+df<-df[-3,]
+
+### Select columns for lowest rating & Location
+### Rename values in lowest rating column
+### Group by Location & lowest rating
+### Tally resukts, keep highest count
+df2<-select(data1, Rating_1, Location) %>% drop_na() %>% mutate(Rating_1 = str_replace(Rating_1, "1", "Star Wars: Episode I The Phantom Menace"), Rating_1 = str_replace(Rating_1, "2", "Star Wars: Episode II Attack of the Clones"), Rating_1 = str_replace(Rating_1, "3", "Star Wars: Episode III Revenge of the Sith"), Rating_1 = str_replace(Rating_1, "4", "Star Wars: Episode IV A New Hope"), Rating_1 = str_replace(Rating_1, "5", "Star Wars: Episode V The Empire Strikes Back"), Rating_1 = str_replace(Rating_1, "6", "Star Wars: Episode VI Return of The Jedi")) %>% group_by(Location, Rating_1) %>% tally() %>% group_by(Location) %>% top_n(1, n)
+
+### Join state/region data frame with highest rating data frame,
+### remove useless columns, join lowest rating data frame,
+### remove useless columns, change state names to all lower case,
+### melt data frame
+df3<-left_join(statedf, df, by="Location") %>% select(-n) %>% left_join(df2, by="Location") %>% select(-n, -Location) %>% mutate(State = tolower(State)) %>% melt(id.vars="State")
+
+### Change factor labels for facet_wrap
+df3$variable<-factor(df3$variable, levels=c("Rating_6", "Rating_1"), labels=c("Favorite Star Wars Movie", "Least Favorite Star Wars Movie"))
+
+### Create plot
+A<-ggplot(df3, aes(map_id = State)) +
+  geom_map(aes(fill=value), map=fifty_states) +
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL) +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", legend.title=element_blank(), panel.background = element_blank()) +
+  facet_wrap(~variable) +
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+### Save plot to file
+png("Location.fave.png")
+plot(A)
+dev.off()

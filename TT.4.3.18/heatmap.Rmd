@@ -1,0 +1,35 @@
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+
+rm(list=ls())
+
+## Read in file
+df<-read.csv("us.avg.tuition.noCR.csv", header=T)
+
+## Rename columns
+colnames(df)<-c("State","04-05","05-06","06-07","07-08","08-09","09-10","10-11","11-12","12-13","13-14","14-15","15-16")
+
+## Convert 1st column to character
+df$State<-as.character(df$State)
+
+## Strip "$" & "," from dollar values
+indx <- sapply(df, is.factor)
+df[indx] <- lapply(df[indx], function(x) as.numeric(gsub("[,$]", "", x)))
+
+## Melt dataframe
+dfm<-melt(df, id.vars = "State")
+
+## color palette
+myPalette <- colorRampPalette(rev(brewer.pal(11, "RdYlBu")))
+
+## heat map plot
+A<-ggplot(dfm, aes(fct_rev(State), variable)) +
+  geom_tile(aes(fill=value)) +
+  coord_flip() +
+  scale_fill_gradientn(colours = myPalette(11)) +
+  labs(y="State", x="Years", fill="Tuition ($)")
+
+pdf("heatmap.avg.tuition.pdf")
+plot(A)
+dev.off()

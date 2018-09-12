@@ -1,0 +1,42 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday - Week 11 data
+
+The data for week 11 can be found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2018-06-12/week11_fifa_audience.csv). It's FIFA audience data.
+
+```{r}
+library(tidyverse)
+
+data <- read_csv("fifa.csv")
+head(data)
+```
+From the head() command, we can see there are six columns: X1 (no name in orginal file), country, confederation, population share, tv audience share, gdp weighted share.
+
+First, let's clean up the data just a bit. We don't need the first column (X1). It's more than likely row numbers left over from the original data source. You can use the select() command to keep columns of interest by name. If you put a minus sign (-) in front of the column name, it drops that column from the tibble. Let's drop the first column & save the cleaner tibble to a new object.
+
+```{r}
+data1 <- data %>%
+  select(-X1)
+
+head(data1)
+```
+Using the head() command, we can see the first column was removed from the tibble.
+
+Let's look at the population share by confederation. First, I'm going to use select to keep only the columns we are insterested in. Then, we need to group the rows by confederation. We do this by using the group_by() command. You can group by mutiple columns if you need to. Then we need to add the population share for all the rows in each group. For this, we use the summarise() command. We create a new variable named "total_pop_share". Then assign the sum of population_share to this new variable.
+
+```{r}
+data1 <- data1 %>%
+  select(confederation, population_share) %>%
+  group_by(confederation) %>%
+  summarise(total_pop_share = sum(population_share))
+
+head(data1)
+```
+Let's make a bar plot using this tibble now.
+
+```{r}
+ggplot(data1) +
+  geom_col(aes(confederation, total_pop_share, fill = confederation))
+```

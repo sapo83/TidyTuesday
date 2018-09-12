@@ -1,0 +1,76 @@
+library(reshape2)
+library(rvest)
+library(plyr)
+library(tidyverse)
+
+### Clear workspace
+rm(list=ls())
+
+### Read in csv
+data<-read.csv("aus.salary.csv",header=TRUE, sep=',', row.names=1)
+
+### Find top 10 salaries based on gender
+tendata<-group_by(data, gender) %>% top_n(n=10, wt=average_taxable_income) %>% arrange(desc(average_taxable_income)) %>% select(occupation, gender, average_taxable_income)
+
+### Melt data frame
+dfm<-melt(tendata)
+
+### Plot
+A<-ggplot(dfm, aes(occupation, value, color=gender, group=gender)) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_blank()) +
+  ylab("Salary") +
+  xlab("Occupation")
+
+### Save to file
+png("line.plot.top10.png")
+plot(A)
+dev.off()
+
+### Select columns for plotting all data
+newdata<-select(data, occupation, gender, average_taxable_income)
+dfm2<-melt(newdata)
+
+### Plot all data as individual points
+B<-ggplot(dfm2, aes(occupation, value, color=gender, group=gender)) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma) +
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  ylab("Salary") +
+  xlab("Occupation")
+
+### Save plot to file
+png("scatter.all.png")
+plot(B)
+dev.off()
+
+### Box plot of all salaries
+C<-ggplot(dfm2, aes(gender, value, color=gender)) +
+  geom_boxplot() +
+  scale_y_continuous(labels = scales::comma) +
+  ylab("Salary") +
+  xlab("Gender")
+
+### Save to file
+png("boxplot.all.png")
+plot(C)
+dev.off()
+
+### Select top 10 occupations by gender & individuals reported
+ndata<-select(data, occupation, gender, average_taxable_income, individuals) %>% group_by(gender) %>% top_n(n=10, wt=individuals) %>% arrange(desc(individuals))
+
+### Shorten occupations
+ndata$newO<-sub(';.*$','', ndata$occupation)
+
+### Plot
+D<-ggplot(ndata, aes(newO, individuals, color=gender, size=average_taxable_income)) +
+  geom_point() +
+  coord_flip() +
+  ylab("Number of People") +
+  xlab("Occupation")
+
+png("top10.jobs.by.indiv.png")
+plot(D)
+dev.off()

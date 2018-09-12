@@ -1,0 +1,61 @@
+library(fiftystater)
+library(readxl)
+library(reshape2)
+library(tidyverse)
+
+## Clear workspace
+rm(list=ls())
+
+## Read in excel file
+data<-read_excel("week6_coffee_chains.xlsx")
+
+### Calculate total number of Starbucks (13311)
+totaldf<-filter(data, Country == "US", 'State/Province' != "DC") %>% select(Brand) %>% group_by(Brand) %>% summarise(num=n())
+
+### Filter data for US Starbucks stores,
+### select needed column, rename column, group by state,
+### calculate total number of stores by state,
+### calculate percent of stores by state,
+### change state name from uppercase abbreviation to lowercase name,
+### omit District of Columbia
+countdf<-filter(data, Country == "US", Brand == "Starbucks") %>% select('State/Province') %>% rename(State = 'State/Province') %>% group_by(State) %>% summarise(num = n()) %>% mutate(pct = (num/13311)*100, State = tolower(state.name[match(State,state.abb)])) %>% na.omit()
+
+### Create plot
+A<-ggplot(countdf, aes(map_id = State)) +
+  geom_map(aes(fill = pct), map = fifty_states) +
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL) +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", panel.background = element_blank()) +
+  scale_fill_gradient(low = "red",high = "yellow")
+
+### Save plot tofile
+png("pct.Sbux.state.png", width=600, height=600)
+plot(A)
+dev.off()
+
+### Filter data for US Starbucks stores,
+### select needed column, rename column, group by state,
+### calculate total number of stores by state,
+### calculate log2 of percent of stores by state,
+### change state name from uppercase abbreviation to lowercase name,
+### omit District of Columbia
+countdf2<-filter(data, Country == "US", Brand == "Starbucks") %>% select('State/Province') %>% rename(State = 'State/Province') %>% group_by(State) %>% summarise(num = n()) %>% mutate(pct = log2((num/13311)*100), State = tolower(state.name[match(State,state.abb)])) %>% na.omit()
+
+### Create the plot
+B<-ggplot(countdf2, aes(map_id = State)) +
+  geom_map(aes(fill = pct), map = fifty_states) +
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL) +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", panel.background = element_blank()) +
+  scale_fill_gradient(low = "red",high = "yellow")
+
+### Save the plot to file
+png("pct.Sbux.state.log2.png", width=600, height=600)
+plot(B)
+dev.off()
