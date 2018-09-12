@@ -18,6 +18,6 @@ Tutorials
 
 [Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
-[Faceted bar plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
+[Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
 
-[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
+[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.6.5.18/1.md)
