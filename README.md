@@ -1,4 +1,4 @@
-#TidyTuesday
+## #TidyTuesday
 
 This my Tidy Tuesday repository. These exercises are based on the weekly datasets provided under the #TidyTuesday on Twitter.
 
@@ -8,7 +8,7 @@ This has been a great way to work on my data visualization skills. My emphasis h
 
 I've also been tyring to learn how to use git from the command line.
 
-Tutorials
+## Tutorials
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
 
