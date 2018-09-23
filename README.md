@@ -14,7 +14,9 @@ I've also been using this as a way to learn how to use git from the command line
 
 [Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
 
-[Choropleth plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.11.18/TT.9.11.18.choropleth.md)
+[Choropleth plot (US)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.11.18/TT.9.11.18.choropleth.md)
+
+[Choropleth plot (state)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.18.18/IL.airport.choropleth.md)
 
 [Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
