@@ -8,18 +8,21 @@ This has been a great way to work on my data visualization skills. My emphasis h
 
 I've also been using this as a way to learn how to use git from the command line.
 
-## Tutorials
+## Tutorials (alphabetically)
 
-[Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
-
-[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
+[Choropleth plot (state)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.18.18/IL.airport.choropleth.md)
 
 [Choropleth plot (US)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.11.18/TT.9.11.18.choropleth.md)
 
-[Choropleth plot (state)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.18.18/IL.airport.choropleth.md)
+[Cleveland dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.25.18/cleveland.dotplot.md)
+
+[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.6.5.18/1.md)
 
 [Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
 [Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
 
-[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.6.5.18/1.md)
+[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md
+
+[Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
+
