@@ -22,7 +22,7 @@ I've also been using this as a way to learn how to use git from the command line
 
 [Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
 
-[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md
+[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
 
