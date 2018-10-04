@@ -26,3 +26,5 @@ I've also been using this as a way to learn how to use git from the command line
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
 
+
+Any comments or questions, please feel free to open an issue/pull request. I'm always open to feedback!
