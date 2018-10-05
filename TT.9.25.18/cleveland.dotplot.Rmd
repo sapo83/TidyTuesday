@@ -248,8 +248,7 @@ ggplot(plotdf) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
   xlim(-0.15,1.15) +
-  scale_color_manual(values = c("#da532c", "#9f00a7"),
-    labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
+  scale_color_manual(values = c("#da532c", "#9f00a7"), labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
   guides(colour = guide_legend(override.aes = list(size=3))) +
   theme(legend.position = "bottom",
     legend.title = element_blank(),

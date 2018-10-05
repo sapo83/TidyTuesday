@@ -9,38 +9,12 @@ I used the tables in the “raw” folder.
 This week, we’re going to do a Cleveland dot plot\!
 
 First, let’s load the libraries we’ll be using & read in our data. We’ll
-use head() to take a quick peek at the
-    data.
+use head() to take a quick peek at the data.
 
 ``` r
 library(tidyverse)
-```
-
-    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
-
-    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-    ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-
-    ## Warning: package 'dplyr' was built under R version 3.5.1
-
-    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
 library(reshape2)
-```
 
-    ## 
-    ## Attaching package: 'reshape2'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     smiths
-
-``` r
 data <- read_csv("table1.csv")
 ```
 
@@ -551,8 +525,7 @@ ggplot(plotdf) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
   xlim(-0.15,1.15) +
-  scale_color_manual(values = c("#da532c", "#9f00a7"),
-    labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
+  scale_color_manual(values = c("#da532c", "#9f00a7"), labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
   guides(colour = guide_legend(override.aes = list(size=3))) +
   theme(legend.position = "bottom",
     legend.title = element_blank(),
