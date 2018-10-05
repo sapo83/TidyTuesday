@@ -240,7 +240,6 @@ ggplot(plotdf) +
 Last thing I want to fix is the legend. First I want to move the legend to the bottom of the plot. This can be done inside the theme() call using legend.position = "bottom". I removed the legend title using "legend.title". Then I removed the size legend using scale_size(). I changed the labels for the legend inside the scale_color_manual() call. I changed the dot size inside the guides() call.
 
 ```{r}
-```{r}
 ggplot(plotdf) +
   geom_line(aes(x = value, y = Country)) +
   geom_point(aes(x = value, y = Country, color = variable), size = 3) +
