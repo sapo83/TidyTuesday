@@ -9,12 +9,38 @@ I used the tables in the “raw” folder.
 This week, we’re going to do a Cleveland dot plot\!
 
 First, let’s load the libraries we’ll be using & read in our data. We’ll
-use head() to take a quick peek at the data.
+use head() to take a quick peek at the
+    data.
 
 ``` r
 library(tidyverse)
-library(reshape2)
+```
 
+    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
+
+    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+    ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
+
+    ## Warning: package 'dplyr' was built under R version 3.5.1
+
+    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+
+``` r
+library(reshape2)
+```
+
+    ## 
+    ## Attaching package: 'reshape2'
+
+    ## The following object is masked from 'package:tidyr':
+    ## 
+    ##     smiths
+
+``` r
 data <- read_csv("table1.csv")
 ```
 
@@ -385,27 +411,29 @@ in our final list. We can use “%in%” to select only the countries that
 appear in our list.
 
 We’re also going to go ahead & drop our rank columns because we won’t be
-needing them for the final plot. Finally, we’re going to use gather() to
-make our data frame “longer” & easier to plot.
+needing them for the final plot. Finally, we’re going to melt the data
+frame to make it easier to plot.
 
 ``` r
 plotdf <- full_join(table1_df, table3_df, by = "Country") %>%
   filter(Country %in% final_list$Country) %>%
   select(-contains("Rank")) %>%
-  gather(OTt:TICt, key = "variable", value = "value")
+  melt()
+```
 
+    ## Using Country as id variables
+
+``` r
 head(plotdf)
 ```
 
-    ## # A tibble: 6 x 3
-    ##   Country       variable value
-    ##   <chr>         <chr>    <dbl>
-    ## 1 Mongolia      OTt      0.992
-    ## 2 Guinea-Bissau OTt      0.990
-    ## 3 Nepal         OTt      0.986
-    ## 4 Bangladesh    OTt      0.980
-    ## 5 Cambodia      OTt      0.969
-    ## 6 Denmark       OTt      0.966
+    ##         Country variable  value
+    ## 1      Mongolia      OTt 0.9922
+    ## 2 Guinea-Bissau      OTt 0.9903
+    ## 3         Nepal      OTt 0.9856
+    ## 4    Bangladesh      OTt 0.9803
+    ## 5      Cambodia      OTt 0.9688
+    ## 6       Denmark      OTt 0.9659
 
 Let’s start plotting our figure\! The hallmark of a Cleveland dot plot
 is two values (points) connected by a line. We use geom\_point() to plot
@@ -414,20 +442,19 @@ geom\_line() to connect our two points together.
 
 ``` r
 ggplot(plotdf) +
-  geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable))
+  geom_point(aes(x = value, y = Country, color = variable)) +
+  geom_line(aes(x = value, y = Country))
 ```
 
 ![](cleveland.dotplot_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 Looks good so far\! First, let’s change up the colors & make the points
-bigger. We can use “size =” in our geom\_point() call to change the size
-of our dots. Make sure to put it outside of the aes() call.
+bigger
 
 ``` r
 ggplot(plotdf) +
+  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7"))
 ```
 
@@ -444,8 +471,8 @@ elements to “element\_blank()”. Lastly, I removed the background using
 
 ``` r
 ggplot(plotdf) +
+  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7")) +
   theme(axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -467,8 +494,8 @@ the “OTt” labels.
 
 ``` r
 ggplot(plotdf) +
+  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
@@ -484,7 +511,7 @@ ggplot(plotdf) +
 
 I like the labels but we can’t see some of them\! We can widen the
 x-axis to fix this issue. I used xlim() to change the limits on the
-x-axis. I added 0.15 in each direction to make enough room for the
+x-axis. I added 0.1 in each direction to make enough room for the
 labels.
 
 I also bumped up the font size on the y-axis labels. I did this using
@@ -492,13 +519,13 @@ I also bumped up the font size on the y-axis labels. I did this using
 
 ``` r
 ggplot(plotdf) +
+  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
-  xlim(-0.15,1.15) +
+  xlim(-0.1,1.1) +
   scale_color_manual(values = c("#da532c", "#9f00a7")) +
   theme(axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -512,20 +539,21 @@ ggplot(plotdf) +
 Last thing I want to fix is the legend. First I want to move the legend
 to the bottom of the plot. This can be done inside the theme() call
 using legend.position = “bottom”. I removed the legend title using
-“legend.title”. I changed the labels for the legend inside the
-scale\_color\_manual() call. I changed the dot size inside the guides()
-call.
+“legend.title”. Then I removed the size legend using scale\_size(). I
+changed the labels for the legend inside the scale\_color\_manual()
+call. I changed the dot size inside the guides() call.
 
 ``` r
 ggplot(plotdf) +
+  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
-  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
-  xlim(-0.15,1.15) +
+  xlim(-0.1,1.1) +
   scale_color_manual(values = c("#da532c", "#9f00a7"), labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
+  scale_size(guide = "none") +
   guides(colour = guide_legend(override.aes = list(size=3))) +
   theme(legend.position = "bottom",
     legend.title = element_blank(),
@@ -540,6 +568,3 @@ ggplot(plotdf) +
 
 Looks great\! If you have any questions or comments, feel feel to get in
 touch with me via [Twitter](https://twitter.com/sapo83).
-
-Thanks to [othonamtegazza](https://github.com/othomantegazza) for the
-excellent feedback\!
