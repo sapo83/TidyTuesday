@@ -160,7 +160,7 @@ We're also going to go ahead & drop our rank columns because we won't be needing
 plotdf <- full_join(table1_df, table3_df, by = "Country") %>%
   filter(Country %in% final_list$Country) %>%
   select(-contains("Rank")) %>%
-  melt()
+  gather(OTt:TICt, key = "variable", value = "value")
 
 head(plotdf)
 ```
@@ -170,8 +170,8 @@ Let's start plotting our figure! The hallmark of a Cleveland dot plot is two val
 ```{r}
 
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable)) +
-  geom_line(aes(x = value, y = Country))
+  geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable))
 ```
 
 Looks good so far! First, let's change up the colors & make the points bigger
@@ -179,8 +179,8 @@ Looks good so far! First, let's change up the colors & make the points bigger
 ```{r}
 
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7"))
 ```
 
@@ -189,8 +189,8 @@ I'm liking that. I want to make the plot a bit cleaner by removing the x-axis. I
 ```{r}
 
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7")) +
   theme(axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -203,8 +203,8 @@ Now, I want to add a label next to each of the points. I want the TICt labels to
 ```{r}
 
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
@@ -222,8 +222,8 @@ I also bumped up the font size on the y-axis labels. I did this using "axis.text
 
 ```{r}
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
@@ -241,15 +241,14 @@ Last thing I want to fix is the legend. First I want to move the legend to the b
 
 ```{r}
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
   xlim(-0.1,1.1) +
   scale_color_manual(values = c("#da532c", "#9f00a7"), labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
-  scale_size(guide = "none") +
   guides(colour = guide_legend(override.aes = list(size=3))) +
   theme(legend.position = "bottom",
     legend.title = element_blank(),
