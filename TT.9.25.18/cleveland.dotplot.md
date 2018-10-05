@@ -411,29 +411,27 @@ in our final list. We can use “%in%” to select only the countries that
 appear in our list.
 
 We’re also going to go ahead & drop our rank columns because we won’t be
-needing them for the final plot. Finally, we’re going to melt the data
-frame to make it easier to plot.
+needing them for the final plot. Finally, we’re going to use gather() to
+make the data frame “longer” & easier to plot.
 
 ``` r
 plotdf <- full_join(table1_df, table3_df, by = "Country") %>%
   filter(Country %in% final_list$Country) %>%
   select(-contains("Rank")) %>%
-  melt()
-```
+  gather(OTt:TICt, key = "variable", value = "value")
 
-    ## Using Country as id variables
-
-``` r
 head(plotdf)
 ```
 
-    ##         Country variable  value
-    ## 1      Mongolia      OTt 0.9922
-    ## 2 Guinea-Bissau      OTt 0.9903
-    ## 3         Nepal      OTt 0.9856
-    ## 4    Bangladesh      OTt 0.9803
-    ## 5      Cambodia      OTt 0.9688
-    ## 6       Denmark      OTt 0.9659
+    ## # A tibble: 6 x 3
+    ##   Country       variable value
+    ##   <chr>         <chr>    <dbl>
+    ## 1 Mongolia      OTt      0.992
+    ## 2 Guinea-Bissau OTt      0.990
+    ## 3 Nepal         OTt      0.986
+    ## 4 Bangladesh    OTt      0.980
+    ## 5 Cambodia      OTt      0.969
+    ## 6 Denmark       OTt      0.966
 
 Let’s start plotting our figure\! The hallmark of a Cleveland dot plot
 is two values (points) connected by a line. We use geom\_point() to plot
@@ -442,19 +440,20 @@ geom\_line() to connect our two points together.
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable)) +
-  geom_line(aes(x = value, y = Country))
+  geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable))
 ```
 
 ![](cleveland.dotplot_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 Looks good so far\! First, let’s change up the colors & make the points
-bigger
+bigger. We can do this by adding “size=” to our geom\_point() call. Make
+sure you place it outside of the aes() call.
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7"))
 ```
 
@@ -471,8 +470,8 @@ elements to “element\_blank()”. Lastly, I removed the background using
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   scale_color_manual(values = c("#da532c", "#9f00a7")) +
   theme(axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -494,8 +493,8 @@ the “OTt” labels.
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
@@ -511,7 +510,7 @@ ggplot(plotdf) +
 
 I like the labels but we can’t see some of them\! We can widen the
 x-axis to fix this issue. I used xlim() to change the limits on the
-x-axis. I added 0.1 in each direction to make enough room for the
+x-axis. I added 0.15 in each direction to make enough room for the
 labels.
 
 I also bumped up the font size on the y-axis labels. I did this using
@@ -519,13 +518,13 @@ I also bumped up the font size on the y-axis labels. I did this using
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
-  xlim(-0.1,1.1) +
+  xlim(-0.15,1.15) +
   scale_color_manual(values = c("#da532c", "#9f00a7")) +
   theme(axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -539,21 +538,21 @@ ggplot(plotdf) +
 Last thing I want to fix is the legend. First I want to move the legend
 to the bottom of the plot. This can be done inside the theme() call
 using legend.position = “bottom”. I removed the legend title using
-“legend.title”. Then I removed the size legend using scale\_size(). I
-changed the labels for the legend inside the scale\_color\_manual()
-call. I changed the dot size inside the guides() call.
+“legend.title”. I changed the labels for the legend inside the
+scale\_color\_manual() call. I changed the dot size inside the guides()
+call.
 
 ``` r
 ggplot(plotdf) +
-  geom_point(aes(x = value, y = Country, color = variable, size = 3)) +
   geom_line(aes(x = value, y = Country)) +
+  geom_point(aes(x = value, y = Country, color = variable), size = 3) +
   geom_text(data = plotdf %>%
     filter(variable == "TICt"), aes(x = value, y = Country, label = value), hjust = 1.25) +
   geom_text(data = plotdf %>%
     filter(variable == "OTt"), aes(x = value, y = Country, label = value), hjust = -.25) +
   xlim(-0.1,1.1) +
-  scale_color_manual(values = c("#da532c", "#9f00a7"), labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
-  scale_size(guide = "none") +
+  scale_color_manual(values = c("#da532c", "#9f00a7"),
+    labels = c("Overall Invasion Threat (OTt)", "Invasion Cost (TICt) as a Proportion of GDP")) +
   guides(colour = guide_legend(override.aes = list(size=3))) +
   theme(legend.position = "bottom",
     legend.title = element_blank(),
@@ -568,3 +567,6 @@ ggplot(plotdf) +
 
 Looks great\! If you have any questions or comments, feel feel to get in
 touch with me via [Twitter](https://twitter.com/sapo83).
+
+Thanks to [othomantegazza](https://github.com/othomantegazza) for the
+excellent feedback\!
