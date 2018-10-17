@@ -1,0 +1,144 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday 10-16-18 Week 29
+
+This week's data explores different types of college major data, including number of students in majors, salary & type of work. The data can be found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2018-10-16/recent-grads.csv).
+
+Today, I'm going to do a grouped bar plot showing the type of work (full time or part time) for each major category.
+
+Let's start by loading the tidyverse library & reading in our data using `read_csv`. We can use `head()` to take a quick peek at our data.
+
+```{r setup}
+library(tidyverse)
+
+data <- read_csv("college_major.csv", col_names = TRUE)
+
+head(data)
+```
+
+First, I'm going to use `select()` to get the columns we need for this analysis. Further work shows that there are some NAs in this data that prevent further mutation of variables. I'm going to use `na.omit()` to remove those NAs.
+
+Then we need to `group_by()` the major category so we can calculate the totals for each column. Next, we'll use `summarise()` to get our totals. We can use `sum()` to calculate a total for each column by each group (Major_category). We'll use `mutate()` to find the precentages of people working full time & people working part time.
+
+Then we use `select()` to drop the columns we no longer need. Finally, we use `gather()` to get key value pairs for easier plotting. We also use `head()` to see the new structure of our data frame.
+
+```{r tidy}
+type <- data %>%
+select(Major_category, Total, Full_time, Part_time) %>%
+na.omit() %>%
+group_by(Major_category) %>%
+summarise(total = sum(Total), FT = sum(Full_time), PT = sum(Part_time)) %>%
+mutate(FTpct = FT/total, PTpct = PT/total) %>%
+select(-total, -FT, -PT) %>%
+gather(variable, value, FTpct:PTpct)
+
+head(type)
+```
+
+Next, I want to set factor levels for our new "variable" column. The labels in this factor are the labels seen in the legend. We want meaningful labels in the legend so let's take care of that here.
+
+```{r factor}
+type$variable <- factor(type$variable, levels = c("FTpct", "PTpct"), labels = c("Full Time", "Part Time"))
+
+head(type)
+```
+
+Now when we look at our data, we see that variable has more meaningful labels.
+
+Let's get to plotting! First, let's do a basic grouped bar plot. We use `geom_bar()` to get our bar plot. Since we want the bars to be next to each other, we specify `position = "dodge"`. We use `fill` in the `aes()` call to specify how we want our data grouped.
+
+```{r first plot}
+ggplot(type) +
+  geom_bar(aes(x = Major_category, y = value, fill = variable), stat = "identity", position = "dodge")
+```
+
+Looks good so far! First thing I would like to do is flip this on it's side. It will make the major categories easier to read. To do that, we use `coord_flip()`.
+
+```{r second plot}
+ggplot(type) +
+  geom_bar(aes(x = Major_category, y = value, fill = variable), stat = "identity", position = "dodge") +
+  coord_flip()
+```
+
+That makes the major categories much easier to read. Next, let's change the colors & move the legend. We can change the colors by using `scale_fill_manual()`. The colors we want to use go in a character vector. To move the legend to the bottom of the plot, we use `legend.position = "bottom"` inside `theme()`. Other options for legend position are left, top, & right.
+
+```{r third plot}
+ggplot(type) +
+  geom_bar(aes(x = Major_category, y = value, fill = variable), stat = "identity", position = "dodge") +
+  coord_flip() +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("#ff943d", "#2ec0f9"))
+```
+
+Looking even better! Now I want to remove the titles from the axes & the legend. To remove the axes titles, we can use `axis.title = element_blank()` in `theme()`. To remove the legend title, we can use `legend.title = element_blank()` in `theme()`.
+
+```{r fourth plot}
+ggplot(type) +
+  geom_bar(aes(x = Major_category, y = value, fill = variable), stat = "identity", position = "dodge") +
+  coord_flip() +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank()) +
+  scale_fill_manual(values = c("#ff943d", "#2ec0f9"))
+```
+
+I'd like to bump up the font size on my axis labels, remove the panel background & remove the tick marks on the axis labels. We can change the font size of the labels by adding `axis.text = element_text(size = 12)` to `theme()`. We can remove the panel background by adding `panel.background = element_blank()` to `theme()`. To remove the axis tick marks, we add `axis.ticks = element_blank()` to `theme()`.
+
+```{r fifth plot}
+ggplot(type) +
+  geom_bar(aes(x = Major_category, y = value, fill = variable), stat = "identity", position = "dodge") +
+  coord_flip() +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12),
+    panel.background = element_blank(),
+    axis.ticks = element_blank()) +
+  scale_fill_manual(values = c("#ff943d", "#2ec0f9"))
+```
+
+I'd like to reorder the original x axis so that it reads alphabetically. I would also like to add a label at the end of each bar with the value of that bar as a percent.
+
+To reverse the x axis, we use `fct_rev()`. Inside the parentheses goes the column name you would like to reverse. In this case, it is "Major_category". This goes inside the `aes()` call in `geom_bar()`.
+
+To add labels to the plot, we use `geom_text()`. Make sure to set the `aes()` to match `geom_bar()`. Add `label` to the `aes()` to specify what you want the labels to be. I also added `scales::percent()` so the labels would be in percent form. Since we have a grouped plot, we need to specify the `group` inside `aes()` as well. The key to getting the labels to work with a dodged bar plot is using `position = position_dodge(width = 1)` inside `geom_text()` but outside the `aes()` call. Last of all, you can use `hjust` & `vjust` to change the location & alignment of labels. Play around with it till you find something you like!
+
+```{r sixth plot}
+ggplot(type) +
+  geom_bar(aes(x = fct_rev(Major_category), y = value, fill = variable), stat = "identity", position = "dodge") +
+  geom_text(aes(x = fct_rev(Major_category), y = value, label = scales::percent(value), group = variable), position = position_dodge(width = 1), hjust = -0.1) +
+  coord_flip() +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12),
+    panel.background = element_blank(),
+    axis.ticks = element_blank()) +
+  scale_fill_manual(values = c("#ff943d", "#2ec0f9"))
+```
+
+Looks good, but some of our labels are hanging off the end of the plot. We can fix this by adjusting the limits on the "original" y axis. We can use `scale_y_continuous()` to set new limits. This is another option you can play around with until you get what you like.
+
+I want to remove the y axis labels now. We have the bars labeled now so we don't need the axis labels anymore. To do this, I've added `axis.text.x = element_blank()` to `theme()`.
+
+Last of all, I would like to reorder the legend so it matches the order of the bars. We can do that by adding `guide = guide_legend(reverse = TRUE)` into `scale_fill_manual()`.
+
+```{r final plot}
+ggplot(type) +
+  geom_bar(aes(x = fct_rev(Major_category), y = value, fill = variable), stat = "identity", position = "dodge") +
+  geom_text(aes(x = fct_rev(Major_category), y = value, label = scales::percent(value), group = variable), position = position_dodge(width = 1), hjust = -0.1) +
+  coord_flip() +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12),
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.x = element_blank()) +
+  scale_y_continuous(limits = c(0,.85)) +
+  scale_fill_manual(values = c("#ff943d", "#2ec0f9"), guide = guide_legend(reverse = TRUE))
+```
+
+That's a great looking plot!!! If you have an feedback or questions, you create an issue/pull request or you can always connect with me on [Twitter](https://twitter.com/sapo83).
