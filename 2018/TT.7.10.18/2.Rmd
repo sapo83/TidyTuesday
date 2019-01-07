@@ -1,0 +1,32 @@
+library(dendextend)
+library(readxl)
+library(tidyverse)
+
+### Read in both sheets from Excel file
+beer_data <- read_excel("week15_beers.xlsx", sheet = "beers")
+
+df <- beer_data %>%
+  select(style) %>%
+  group_by(style) %>%
+  summarise(count = n())
+
+count_mt <- as.matrix(df[,2])
+rownames(count_mt) <- df$style
+
+dd <- as.dendrogram(hclust(dist(count_mt), "average")) %>%
+  set('branches_k_color', k = 10) %>%
+  set('branches_lwd', 0.6) %>%
+  set('labels_colors', k = 10) %>%
+  set('labels_cex', 0.6) %>%
+#  set("nodes_pch", 19) %>%
+#  set("nodes_col", c("orange", "black", "plum", NA)) %>%
+  I
+
+#plot(dd)
+
+ggd1 <- as.ggdend(dd)
+A <- ggplot(ggd1) +
+  scale_y_reverse(expand = c(0.2, 0)) +
+  coord_polar(theta="x")
+
+plot(A)

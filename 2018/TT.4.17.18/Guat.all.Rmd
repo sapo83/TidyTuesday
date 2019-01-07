@@ -1,0 +1,53 @@
+library(RColorBrewer)
+library(readxl)
+library(reshape2)
+library(tidyverse)
+library(scales)
+
+## Clear workspace
+rm(list=ls())
+
+## Read in excel file
+data<-read_excel("global_mortality.xlsx")
+
+## Replace all NAs with 0
+data[is.na(data)] <- 0
+
+## Remove (%) from column names
+names(data) <- str_trim(str_remove_all(names(data), "[[:punct:]]"))
+
+## Subset data by country (Guatemala)
+datan<-subset(data, countrycode == "GTM")
+
+## Remove countrycode
+datan<-select(datan, -(countrycode)) %>% select(-(country))
+
+## Subset data based on column average
+datan<-datan[, -which((numcolwise(mean)(datan)) < 1.5)]
+
+## Order columns of tibble alphabetically
+datan<-datan[,sort(names(datan))]
+
+## Melt data frame
+dfm<-melt(datan, id.vars="year")
+
+## Find number of unique variables (diseases)
+colourCount = length(unique(dfm$variable))
+
+## Choose color palettes
+getPalette = colorRampPalette(brewer.pal(8, "Dark2"))
+
+## Create plot
+A<-ggplot(dfm, aes(year,value, fill=variable)) +
+  geom_bar(stat="identity") +
+  facet_wrap(~ variable, nrow=8) +
+  scale_fill_manual(values = getPalette(colourCount)) +
+  theme(legend.position="none") +
+  scale_y_continuous(labels=function(x) paste0(x,"%")) +
+  ylab("") +
+  xlab("Year")
+
+## Save plot to file
+png("Guat.all.png", height=600, width=500)
+plot(A)
+dev.off()

@@ -1,0 +1,27 @@
+library(readxl)
+library(tidyverse)
+
+### Read in both sheets from Excel file
+beer_data <- read_excel("week15_beers.xlsx", sheet = "beers")
+brewery_data <- read_excel("week15_beers.xlsx", sheet = "breweries") %>%
+  rename(brewery_id = id)
+
+### Join both data frames by brewery ID,
+### count style by state,
+### filter if less than 10 in count
+state_style <- left_join(beer_data, brewery_data, by="brewery_id") %>%
+  select(style, state) %>%
+  group_by(state, style) %>%
+  summarise(count = n()) %>%
+  group_by(style) %>%
+  filter(n() >= 10)
+
+A <- ggplot(state_style) +
+  geom_point(aes(x = state, y = fct_rev(style), size = count, color = count)) +
+  scale_colour_gradient(low = "blue", high = "orange") +
+  theme(legend.position="bottom", axis.text = element_text(size=12), axis.title = element_blank()) +
+  guides(size = FALSE)
+
+png("beer.count.by.state.png", height=1000, width=1000)
+plot(A)
+dev.off()
