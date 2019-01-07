@@ -10,6 +10,8 @@ I've also been using this as a way to learn how to use git from the command line
 
 ## Tutorials (alphabetically)
 
+[Bar plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
+
 [Box plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.9.18/boxplot.md)
 
 [Choropleth plot (state)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.18.18/IL.airport.choropleth.md)
