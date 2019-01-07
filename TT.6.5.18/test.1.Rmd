@@ -1,5 +1,0 @@
-library(tidyverse)
-
-#data <- read_csv("new.week10_biketown.csv", col_names=TRUE, na = c("NA:NA:NANA", "00:00:0000"))
-
-data <- read_csv("new.week10_biketown.csv", col_types = cols(Duration = col_character()))
