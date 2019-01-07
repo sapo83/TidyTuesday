@@ -1,0 +1,133 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday 1-1-19 Week 1
+
+It's the beginning of a new year & I'm already behind! What's new?
+
+This week's data is a peek into the statistics of last year's #TidyTuesday & #Rstats tweets.
+I'm going to start off with an analysis of the number of Twitter users who tweeted aboout #Rstats broken down by country. All the data used in this analysis can be found [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-01-01).
+
+Let's start by loading the tidyverse library & our data. This data is provided in .rds format. A quick google search shows that `readRDS()` from base R can be used to read in this type of data. Then I'll use `head()` to take a quick look at the data.
+
+```{r setup}
+library(tidyverse)
+
+data <- readRDS("rstats_tweets.rds")
+
+head(data)
+```
+
+That's a lot of columns!!! I'm going to start by selecting the columns I need using `select()`. Since the same person may have tweeted multiple times, I need to save only one line where their user name & country is recorded. I can use `distinct()` to keep only the unique lines. I'm going to remove all users with an `NA` for the country.
+
+```{r userDF}
+user_df <- data %>%
+  select(screen_name, country) %>%
+  distinct() %>%
+  drop_na()
+
+user_df
+```
+
+A quick look at this data frame shows that some users have multiple countries reported.
+To take this into account, we're going to use the number of rows in this data frame to calculate our percentages. To find the number of rows in the data frame, I can use `nrow()`. I'm going to save the number of rows to a variable (rowNum).
+
+```{r numRows}
+rowNum <- nrow(user_df)
+
+rowNum
+```
+
+Now let's get the counts for each country. First, we group the data frame by country using `group_by()`. Then we use `summarise()` to get the counts. Then, we'll order the data frame by descending count.
+
+```{r count}
+count_df <- user_df %>%
+  group_by(country) %>%
+  summarise(count = n()) %>%
+  arrange(-count)
+
+count_df
+```
+
+Next I'll create the percent data frame. First, we'll keep the top 10 counts. For this, I'll use `top_n()`. If you wanted to get the bottom 10 values, you could use `top_n(-10)`. I'll use mutate to calculate the percentage using the row number variable we created earlier.
+
+```{r percent}
+pct_df <- count_df %>%
+  top_n(10) %>%
+  mutate(pct = (count/rowNum) * 100)
+
+pct_df
+```
+
+Next, I'm going to plot the data. I'm going to use a bar chart.
+
+```{r plot1}
+ggplot(pct_df) +
+  geom_col(aes(x = country, y = pct))
+```
+
+Not bad! Now let's make it pretty. I'm going to add some color to the bars by adding `fill = ` to the `aes()` call. I'm going to use `coord_flip()` to flip the plot on it's side. This will make the countries easier to read.
+
+```{r plot2}
+ggplot(pct_df) +
+  geom_col(aes(x = country, y = pct, fill = country)) +
+  coord_flip()
+```
+
+I want to reorder the (old) x-axis by percent, highest to lowest. I can do this by using `reorder()` in the `aes()` call. I'm also going to remove the legend using the `theme()` call.
+
+```{r plot3}
+ggplot(pct_df) +
+  geom_col(aes(x = reorder(country, pct), y = pct, fill = country)) +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+
+Then I want to add precent labels to the bars so the reader can identify the acutal values. I can do this by adding a `geom_text()` call. I'm going to use `round()` to format them to two decimal places. I'll use paste to add a "%" symbol as well. Lastly, I'll use `hjust` to change the justification of the labels. I would like them at the end of the bar.
+
+```{r plot4}
+ggplot(pct_df) +
+  geom_col(aes(x = reorder(country, pct), y = pct, fill = country)) +
+  geom_text(aes(x = reorder(country, pct), y = pct, label = paste(round(pct, 2), "%")), hjust = -0.25) +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+
+Oops! Now the label can't be fully shown in the plot area. This can be fixed by changing the limits on the plot area. This can be done by simple trial & error. As I make more & more plots, I've tried to find a more progrommatic way of doing this. We're going to use a variable to determine what the plot area should be.
+
+I'm going to create a variable named "max" that holds the maximum precentage in the data frame.
+Then `ylim()` can be used to change the y-axis limits. I like this way because if the data in the data frame changes then the y-axis limit changes along with it.
+
+```{r plot5}
+max <- max(pct_df$pct)
+
+ggplot(pct_df) +
+  geom_col(aes(x = reorder(country, pct), y = pct, fill = country)) +
+  geom_text(aes(x = reorder(country, pct), y = pct, label = paste(round(pct, 2), "%")), hjust = -0.25) +
+  coord_flip() +
+  ylim(0, max * 1.10) +
+  theme(legend.position = "none")
+```
+
+Let's do a final clean up! I'm going to add a title using `ggtitle()`. Using the `theme()` call, I'm going to remove the background panel, remove the title & tick marks from both axes, change the font size on the y-axis, remove the text from the x-axis, & center the title on the plot.
+
+```{r plotFin}
+max <- max(pct_df$pct)
+
+ggplot(pct_df) +
+  geom_col(aes(x = reorder(country, pct), y = pct, fill = country)) +
+  geom_text(aes(x = reorder(country, pct), y = pct, label = paste(round(pct, 2), "%")), hjust = -0.25) +
+  coord_flip() +
+  ylim(0, max * 1.10) +
+  ggtitle("#Rstats Tweets By Country") +
+  theme(legend.position = "none",
+    panel.background = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_text(size = 12),
+    axis.text.x = element_blank(),
+    plot.title = element_text(hjust = 0.5))
+```
+
+That looks great! If you have any feedback/questions, please feel free to create an issue or pull requet. You can always connect with me on [Twitter](https://twitter.com/sapo83).
