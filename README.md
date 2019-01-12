@@ -10,7 +10,9 @@ I've also been using this as a way to learn how to use git from the command line
 
 ## Tutorials (alphabetically)
 
-[Bar plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
+Bar plot
+  * [Rstats/TidyTuesday tweets](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
+  * [TV ratings](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.08.19/bar.plot.md)
 
 [Box plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.9.18/boxplot.md)
 
