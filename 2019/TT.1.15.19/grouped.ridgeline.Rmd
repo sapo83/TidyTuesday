@@ -1,0 +1,116 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday 1-15-19 Week 3
+
+This week's data covers space launches. The data can be found [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-01-15).
+
+I've decided to do a ridgeline plot vizualizing launches over time by each country. I'll further categorize the data by success or failure of the launch.
+
+This week, I'm changing things up a bit. I added in a few lines of code to show how you can download the data files from the command line using `curl`.
+
+```{bash, results = "hide"}
+curl -o agencies.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-15/agencies.csv
+
+curl -o launches.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-15/launches.csv
+```
+
+Let's load our libraries and read in our data. To do a ridgeline plot, I'm using the ggridges package. Then, I'll use `head()` to take a look at the data.
+
+```{r setup}
+library(tidyverse)
+library(ggridges)
+
+data <- read_csv("launches.csv")
+
+head(data)
+```
+
+For the final plot, I want to use actual country names instead of the codes. I couldn't find a file that has this data in it. I'll make my own data frame instead. I used a bit of inference to figure out the countries so there might be errors.
+
+This is an example of how to make a data frame from scratch. First, I created two vectors: one with the abbreviations & one with the full country name. Each vector will be a column in the new data frame. The name of the vector will be the column name in the new data frame. Order is important here! The order of each vector needs to match up. Then I used `data.frame()` to join them. You could do this with more than two vectors/columns if need be.
+
+Then I used `head()` again to make sure it looks as expected.
+
+```{r countryDF}
+state_code <- c("US", "UK", "SU", "RU", "KR", "KP", "J", "IR", "IN", "IL", "I-ESA", "I-ELDO", "I", "F", "CYM", "CN", "BR")
+country_name <- c("United States", "United Kingdom", "Soviet Union", "Russia", "South Korea", "North Korea", "Japan", "Iran", "India", "Israel", "European Space Agency", "European Launcher Development Organization", "Italy", "France", "Cayman Islands", "China", "Brasil")
+
+country_df <- data.frame(state_code, country_name)
+
+head(country_df)
+```
+
+Looks good! I'll join the country name data frame to the original data. I used `left_join()` to join the two data frames by the "state_code" column.
+
+```{r joinDF}
+data2 <- data %>%
+  left_join(country_df, by = "state_code")
+
+head(data2)
+```
+
+Let's make our plot! I used `geom_density_ridges()` to make the initial ridegeline plot.
+
+```{r plot1}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = country_name, fill = category))
+```
+
+Not bad! Let's clean it up a bit. First, I'm going to reorder the y-axis. I'd like to see everything in alphabetical order.
+
+```{r plot2}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = fct_rev(country_name), fill = category))
+```
+
+Next, I'd like to change the colors a bit. I'm thinking green for a failed launch & blue for a successful launch. I'm also going to make them slightly transparent to improve readability. To change the colors, you can use `scale_fill_manual()`. To change the transparency, you can add an alpha value to the `geom_density_ridges()` call.
+
+```{r plot3}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = fct_rev(country_name), fill = category), alpha = 0.75) +
+  scale_fill_manual(values = c("springgreen3", "mediumblue"))
+```
+
+Now, I need to clean up the legend a bit. I want to change the wording on the legend & move the legend to the bottom of the plot. The labels on the legend can be changed by adding a "labels" command to the `scale_fill_manual()` call. The label order needs to match the order of the colors.
+
+I added a `theme()` call to move the legend to the bottom & remove the title from the legend.
+
+```{r plot4}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = fct_rev(country_name), fill = category), alpha = 0.75) +
+  scale_fill_manual(labels = c("Failure", "Success"), values = c("springgreen3", "mediumblue")) +
+  theme(legend.position = "bottom",
+    legend.title = element_blank())
+```
+
+I'd like to remove the axis titles next. This can be done in the `theme()` call using `axis.title = element_blank()`. I would also like to change the font size on the axis tick marks. This can also be done in the `theme()` call.
+
+```{r plot5}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = fct_rev(country_name), fill = category), alpha = 0.75) +
+  scale_fill_manual(labels = c("Failure", "Success"), values = c("springgreen3", "mediumblue")) +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12))
+```
+
+Next, I'm going to remove the panel background & the tick marks on the axis. These can both be done in the `theme()` call. Last of all, I'm going to add a plot title using `ggtitle()`. I centered the title & changed the font size in the `theme()` call.
+
+```{r plot6}
+ggplot(data2) +
+  geom_density_ridges(aes(x = launch_year, y = fct_rev(country_name), fill = category), alpha = 0.75) +
+  scale_fill_manual(labels = c("Failure", "Success"), values = c("springgreen3", "mediumblue")) +
+  ggtitle("Individual Space Launches") +
+  theme(legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12),
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    plot.title = element_text(hjust = 0.5, size = 16))
+```
+
+Looks good! If you have any feedback/questions, please feel free to create an issue or pull request. You can always connect with me on [Twitter](https://twitter.com/sapo83).
