@@ -30,6 +30,8 @@ Bar plot
 
 [Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.16.18/grouped.bar.plot.md)
 
+[Grouped ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.15.19/grouped.ridgeline.md)
+
 [Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
