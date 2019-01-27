@@ -14,6 +14,7 @@ Bar plot
   * [Rstats/TidyTuesday tweets](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
   * [TV ratings](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.08.19/bar.plot.md)
   * [California fire data](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.21.18/1.md) - faceted bar plot
+  * [College majors](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.16.18/grouped.bar.plot.md) - grouped bar plot
 
 [Box plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.9.18/boxplot.md)
 
@@ -29,11 +30,9 @@ Choropleth plot
 
 [Dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.22.19/dot.plot.IL.md)
 
-[Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.16.18/grouped.bar.plot.md)
-
-[Grouped ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.15.19/grouped.ridgeline.md)
-
-[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.4.18/TT.9.4.18.ridgeline.md)
+Ridgeline plot
+  * [Cholesterol per item in fast food](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.4.18/TT.9.4.18.ridgeline.md)
+  * [Space launches](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.15.19/grouped.ridgeline.md) - Grouped ridgeline plot
 
 [Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.4.18/TT.9.4.18.box.plot.md)
 
