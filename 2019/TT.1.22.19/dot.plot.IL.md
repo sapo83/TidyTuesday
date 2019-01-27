@@ -22,25 +22,11 @@ are a lot of NAs in this data. To make sure they are handled the way I
 want them to, I added `na = c("", "NA")` to the `read_csv()` function.
 This just tells R that if there is no data in that field to put an NA in
 that field. I used `head()` to get a peek at the data & make sure
-everything looks
-    ok.
+everything looks ok.
 
 ``` r
 library(tidyverse)
-```
 
-    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
-
-    ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
-    ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-
-    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
 data <- read_csv("incarceration_trends.csv", na = c("", "NA"))
 ```
 
@@ -71,14 +57,6 @@ data <- read_csv("incarceration_trends.csv", na = c("", "NA"))
     ## )
 
     ## See spec(...) for full column specifications.
-
-    ## Warning in rbind(names(probs), probs_f): number of columns of result is not
-    ## a multiple of vector length (arg 1)
-
-    ## Warning: 98453 parsing failures.
-    ## row # A tibble: 5 x 5 col     row col            expected             actual  file                   expected   <int> <chr>          <chr>                <chr>   <chr>                  actual 1  1300 native_jail_p… no trailing charact… .333333 'incarceration_trends… file 2  1301 native_jail_p… no trailing charact… .666667 'incarceration_trends… row 3  2284 native_jail_p… no trailing charact… .333333 'incarceration_trends… col 4  2285 native_jail_p… no trailing charact… .666667 'incarceration_trends… expected 5  2292 native_jail_p… no trailing charact… .5      'incarceration_trends…
-    ## ... ................. ... .......................................................................... ........ .......................................................................... ...... .......................................................................... .... .......................................................................... ... .......................................................................... ... .......................................................................... ........ ..........................................................................
-    ## See problems(...) for more details.
 
 ``` r
 head(data)

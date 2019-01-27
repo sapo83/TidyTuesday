@@ -16,7 +16,7 @@ curl -o incarceration_trends.csv https://raw.githubusercontent.com/rfordatascien
 
 Next, I'm going to load the `tidyverse` library & read in my data. There are a lot of NAs in this data. To make sure they are handled the way I want them to, I added `na = c("", "NA")` to the `read_csv()` function. This just tells R that if there is no data in that field to put an NA in that field. I used `head()` to get a peek at the data & make sure everything looks ok.
 
-```{r setup, warnings = FALSE}
+```{r setup, warning = FALSE}
 library(tidyverse)
 
 data <- read_csv("incarceration_trends.csv", na = c("", "NA"))
