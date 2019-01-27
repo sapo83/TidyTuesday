@@ -13,6 +13,7 @@ I've also been using this as a way to learn how to use git from the command line
 Bar plot
   * [Rstats/TidyTuesday tweets](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
   * [TV ratings](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.08.19/bar.plot.md)
+  * [California fire data](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.21.18/1.md) - faceted bar plot
 
 [Box plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.9.18/boxplot.md)
 
@@ -27,8 +28,6 @@ Choropleth plot
 [Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
 [Dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.22.19/dot.plot.IL.md)
-
-[Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.21.18/1.md)
 
 [Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.16.18/grouped.bar.plot.md)
 
