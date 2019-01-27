@@ -18,7 +18,7 @@ Bar plot
 
 Choropleth plot
   * [Airports in Illinois](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.18.18/IL.airport.choropleth.md)
-  * [Cat ownership in the US)](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.11.18/TT.9.11.18.choropleth.md)
+  * [Cat ownership in the US](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.11.18/TT.9.11.18.choropleth.md)
 
 [Cleveland dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.25.18/cleveland.dotplot.md)
 
