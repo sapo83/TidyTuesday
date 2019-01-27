@@ -26,6 +26,8 @@ Bar plot
 
 [Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
+[Dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.22.19/dot.plot.IL.md)
+
 [Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
 
 [Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.16.18/grouped.bar.plot.md)
