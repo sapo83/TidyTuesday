@@ -14,29 +14,29 @@ Bar plot
   * [Rstats/TidyTuesday tweets](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.1.19/bar.plot.md)
   * [TV ratings](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.08.19/bar.plot.md)
 
-[Box plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.9.18/boxplot.md)
+[Box plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.9.18/boxplot.md)
 
-[Choropleth plot (state)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.18.18/IL.airport.choropleth.md)
+Choropleth plot
+  * [Airports in Illinois](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.18.18/IL.airport.choropleth.md)
+  * [Cat ownership in the US)](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.11.18/TT.9.11.18.choropleth.md)
 
-[Choropleth plot (US)](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.11.18/TT.9.11.18.choropleth.md)
+[Cleveland dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.25.18/cleveland.dotplot.md)
 
-[Cleveland dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.25.18/cleveland.dotplot.md)
+[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.6.5.18/1.md)
 
-[Combination bar & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.6.5.18/1.md)
-
-[Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
+[Combination line & dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.28.18/TT.8.28.18.line.dot.plot.md)
 
 [Dot plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.22.19/dot.plot.IL.md)
 
-[Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/TT.8.21.18/1.md)
+[Faceted bar plot with regression line](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.8.21.18/1.md)
 
-[Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.10.16.18/grouped.bar.plot.md)
+[Grouped bar plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.10.16.18/grouped.bar.plot.md)
 
 [Grouped ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/2019/TT.1.15.19/grouped.ridgeline.md)
 
-[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.ridgeline.md)
+[Ridgeline plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.4.18/TT.9.4.18.ridgeline.md)
 
-[Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/TT.9.4.18/TT.9.4.18.box.plot.md)
+[Violin plot](https://github.com/sapo83/TidyTuesday/blob/master/2018/TT.9.4.18/TT.9.4.18.box.plot.md)
 
 
 Any comments or questions, please feel free to open an issue/pull request. I'm always open to feedback!
