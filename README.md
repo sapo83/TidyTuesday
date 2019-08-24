@@ -1,6 +1,6 @@
 ## #TidyTuesday
 
-This is my Tidy Tuesday repository. These exercises are based on the weekly datasets provided under the #TidyTuesday hashtag on Twitter.
+This is my Tidy Tuesday repository. These exercises are based on the weekly datasets provided under the #TidyTuesday hashtag on Twitter. [Github](https://github.com/rfordatascience/tidytuesday)
 
 You can either recreate the original graphic or create something of your own. There is an emphasis on using the tidyverse library but I've used other libraries as well.
 
