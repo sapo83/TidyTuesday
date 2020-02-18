@@ -1,0 +1,11 @@
+---
+output: rmarkdown::github_document
+---
+
+### #TidyTuesday 01-07-2020 Week 2
+
+```{bash, results = "hide"}
+curl -o rainfall.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv
+
+curl -o temperature.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv
+```
