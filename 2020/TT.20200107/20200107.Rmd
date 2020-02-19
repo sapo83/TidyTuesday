@@ -4,8 +4,40 @@ output: rmarkdown::github_document
 
 ### #TidyTuesday 01-07-2020 Week 2
 
-```{bash, results = "hide"}
-curl -o rainfall.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv
+#```{bash, results = "hide"}
+#curl -o rainfall.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv
+#
+#curl -o temperature.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv
+#```
 
-curl -o temperature.csv https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv
+```{r}
+library(tidyverse)
+library(viridis)
+
+rainfall <- readr::read_csv("rainfall.csv")
+
+city_year_totals <- rainfall %>%
+  select(city_name, year, rainfall) %>%
+  replace_na(list(rainfall = 0)) %>%
+  group_by(city_name, year) %>%
+  summarise(total = sum(rainfall)) %>%
+  filter(year %in% 2007:2020)
+
+head(city_year_totals)
+
+ggplot(data = city_year_totals) +
+  geom_col(aes(x = as.factor(year), y = total, color = as.factor(year), fill = as.factor(year))) +
+  facet_wrap(~ city_name) +
+#  scale_x_discrete(limits = 2007:2020, name = " ") +
+  xlab("Year") +
+  ylab("Total Rainfall (mm)") +
+  theme(strip.text.x = element_text(size = 12, color = "black", face = "bold.italic"),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 16),
+    axis.text.x = element_text(angle = -90, hjust = 0),
+    legend.position = "none",
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = "black", linetype = "dashed", size = 0.1)) +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d()
 ```
